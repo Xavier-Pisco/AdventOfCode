@@ -1,4 +1,3 @@
-import { LOADIPHLPAPI } from 'dns';
 import * as files from 'fs';
 
 let input: string[] = files.readFileSync('05.txt').toString().split('\n');
