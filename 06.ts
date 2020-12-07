@@ -1,4 +1,3 @@
-import { group } from 'console';
 import * as files from 'fs';
 
 let input: string[] = files.readFileSync('06.txt').toString().split('\n\n');
