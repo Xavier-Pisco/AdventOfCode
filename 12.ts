@@ -27,31 +27,65 @@ for (let i = 0; i < input.length; i++) {
 			NS -= Number(input[i][1]);
 		}
 	} else if (input[i][0] === 'L') {
-		console.log("Left", input[i][1]);
-
 		rotateLeft(Number(input[i][1]));
 	} else if (input[i][0] === 'R') {
-		console.log("Right", input[i][1]);
 		rotateRight(Number(input[i][1]));
 	}
 }
 
-function rotateLeft(increment: number){
+function rotateLeft(increment: number) {
 	angle = (angle + increment) % 360;
-	console.log(angle);
-
 }
 
-function rotateRight(increment: number){
+function rotateRight(increment: number) {
 	if (angle - increment < 0) {
 		angle += (360 - increment);
 	} else {
 		angle -= increment;
 	}
-	console.log(angle);
-
 }
 
 console.log("1st Part: ", Math.abs(NS) + Math.abs(EW));
 
 
+let waypoint = [1, 10];
+let position = [0, 0];
+
+for (let i = 0; i < input.length; i++) {
+	if (input[i][0] === 'N') {
+		waypoint[0] += Number(input[i][1]);
+	} else if (input[i][0] === 'S') {
+		waypoint[0] -= Number(input[i][1]);
+	} else if (input[i][0] === 'E') {
+		waypoint[1] += Number(input[i][1]);
+	} else if (input[i][0] === 'W') {
+		waypoint[1] -= Number(input[i][1]);
+	} else if (input[i][0] === 'F') {
+		position[0] += Number(input[i][1]) * waypoint[0];
+		position[1] += Number(input[i][1]) * waypoint[1];
+	} else if (input[i][0] === 'L') {
+		rotateLeft2(Number(input[i][1]));
+	} else if (input[i][0] === 'R') {
+		rotateRight2(Number(input[i][1]));
+	}
+	console.log(input[i], waypoint, position);
+
+}
+
+function rotateLeft2(angle: number) {
+	for (let i = 0; i < angle / 90; i++){
+		let temp = waypoint[1];
+		waypoint[1] = -waypoint[0];
+		waypoint[0] = temp;
+	}
+}
+
+function rotateRight2(angle: number) {
+	for (let i = 0; i < angle / 90; i++){
+		let temp = waypoint[1];
+		waypoint[1] = waypoint[0];
+		waypoint[0] = -temp;
+	}
+}
+
+console.log('2nd Part: ', Math.abs(position[0]) + Math.abs(position[1]));
