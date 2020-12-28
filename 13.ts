@@ -1,5 +1,4 @@
 import * as files from 'fs';
-import { off } from 'process';
 
 let input = files.readFileSync('13.txt').toString().split('\n');
 
