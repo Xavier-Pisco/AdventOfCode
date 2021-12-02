@@ -3,22 +3,16 @@ package main
 import (
 	"fmt"
 	"math"
-	"os"
 	"strconv"
-	"strings"
-)
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
+	"aoc2021"
+)
 
 func first(splitted_strings []string) int {
 	previous_value, increases := math.MaxInt, 0
 	for _, s := range splitted_strings {
 		value, err := strconv.Atoi(s)
-		check(err)
+		aoc2021.Check(err)
 		if value > previous_value {
 			increases++
 		}
@@ -31,7 +25,7 @@ func sum_array(array []string) int {
 	sum := 0
 	for _, s := range array {
 		value, err := strconv.Atoi(s)
-		check(err)
+		aoc2021.Check(err)
 		sum += value
 	}
 	return sum
@@ -52,12 +46,7 @@ func second(splitted_strings []string) int {
 }
 
 func main() {
-	bytes, err := os.ReadFile("real.txt")
-	check(err)
-
-	var text string = string(bytes)
-
-	splitted_strings := strings.Split(text, "\n")
+	splitted_strings := aoc2021.Read("real.txt")
 	fmt.Println("First: ", first(splitted_strings))
 	fmt.Println("Second: ", second(splitted_strings))
 }
