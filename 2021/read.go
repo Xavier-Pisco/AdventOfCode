@@ -12,6 +12,10 @@ func Check(e error) {
 }
 
 func Read(path string) []string {
+	return ReadWithDelimiter(path, "\n")
+}
+
+func ReadWithDelimiter(path string, delimiter string) []string {
 	bytes, err := os.ReadFile(path)
 
 	if err != nil {
@@ -20,5 +24,17 @@ func Read(path string) []string {
 
 	var text string = string(bytes)
 
-	return strings.Split(text, "\n")
+	return strings.Split(text, delimiter)
+}
+
+func CompareArrays(line1 []int, line2 []int) bool {
+	if len(line1) != len(line2) {
+		return false
+	}
+	for i := range line1 {
+		if line1[i] != line2[i] {
+			return false
+		}
+	}
+	return true
 }
