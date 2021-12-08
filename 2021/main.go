@@ -1,5 +1,11 @@
 package main
 
+import (
+	"fmt"
+
+	eight "2021/08"
+)
+
 func main() {
 	//fmt.Println("One:")
 	//one.Solve()
@@ -15,4 +21,6 @@ func main() {
 	//six.Solve()
 	//fmt.Println("Seven:")
 	//seven.Solve()
+	fmt.Println("Eight:")
+	eight.Solve()
 }
