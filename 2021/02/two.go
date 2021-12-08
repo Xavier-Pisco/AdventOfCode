@@ -1,20 +1,20 @@
-package main
+package two
 
 import (
-	"aoc2021"
+	"2021/Utilities"
 	"fmt"
 	"strconv"
 	"strings"
 )
 
-func first(splitted_strings []string) int {
+func First(splittedStrings []string) int {
 	horizontal, depth := 0, 0
 
-	for _, s := range splitted_strings {
+	for _, s := range splittedStrings {
 		command := strings.Split(s, " ")
 		direction := command[0]
 		value, err := strconv.Atoi(command[1])
-		aoc2021.Check(err)
+		Utilities.Check(err)
 		switch direction {
 		case "forward":
 			horizontal += value
@@ -29,14 +29,14 @@ func first(splitted_strings []string) int {
 	return horizontal * depth
 }
 
-func second(splitted_strings []string) int {
+func Second(splittedStrings []string) int {
 	horizontal, depth, aim := 0, 0, 0
 
-	for _, s := range splitted_strings {
+	for _, s := range splittedStrings {
 		command := strings.Split(s, " ")
 		direction := command[0]
 		value, err := strconv.Atoi(command[1])
-		aoc2021.Check(err)
+		Utilities.Check(err)
 		switch direction {
 		case "forward":
 			horizontal += value
@@ -52,8 +52,8 @@ func second(splitted_strings []string) int {
 	return horizontal * depth
 }
 
-func main() {
-	splitted_strings := aoc2021.Read("real.txt")
-	fmt.Println(first(splitted_strings))
-	fmt.Println(second(splitted_strings))
+func Solve() {
+	splittedStrings := Utilities.Read("02/real.txt")
+	fmt.Println(First(splittedStrings))
+	fmt.Println(Second(splittedStrings))
 }

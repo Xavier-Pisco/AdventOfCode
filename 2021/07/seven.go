@@ -1,7 +1,7 @@
-package main
+package seven
 
 import (
-	"aoc2021"
+	"2021/Utilities"
 	"fmt"
 	"math"
 	"strconv"
@@ -19,30 +19,30 @@ func fuelNeeded2(position int, destination int) int {
 	return fuel
 }
 
-func initialPositions(splitted_strings []string) []int {
+func initialPositions(splittedStrings []string) []int {
 	positions := make([]int, 0)
-	for _, s := range splitted_strings {
+	for _, s := range splittedStrings {
 		position, err := strconv.Atoi(s)
-		aoc2021.Check(err)
+		Utilities.Check(err)
 		positions = append(positions, position)
 	}
 	return positions
 }
 
-func moveToPosition(positions []int, final_position int) int {
-	total_fuel := 0
+func moveToPosition(positions []int, finalPosition int) int {
+	totalFuel := 0
 	for _, position := range positions {
-		total_fuel += fuelNeeded(position, final_position)
+		totalFuel += fuelNeeded(position, finalPosition)
 	}
-	return total_fuel
+	return totalFuel
 }
 
-func moveToPosition2(positions []int, final_position int) int {
-	total_fuel := 0
+func moveToPosition2(positions []int, finalPosition int) int {
+	totalFuel := 0
 	for _, position := range positions {
-		total_fuel += fuelNeeded2(position, final_position)
+		totalFuel += fuelNeeded2(position, finalPosition)
 	}
-	return total_fuel
+	return totalFuel
 }
 
 func maxPosition(positions []int) int {
@@ -53,8 +53,8 @@ func maxPosition(positions []int) int {
 	return max
 }
 
-func first(splitted_strings []string) int {
-	positions := initialPositions(splitted_strings)
+func First(splittedStrings []string) int {
+	positions := initialPositions(splittedStrings)
 	limit := maxPosition(positions)
 	best := math.MaxInt
 	for i := 0; i < limit; i++ {
@@ -63,8 +63,8 @@ func first(splitted_strings []string) int {
 	return best
 }
 
-func second(splitted_strings []string) int {
-	positions := initialPositions(splitted_strings)
+func Second(splittedStrings []string) int {
+	positions := initialPositions(splittedStrings)
 	limit := maxPosition(positions)
 	best := math.MaxInt
 	for i := 0; i < limit; i++ {
@@ -73,8 +73,8 @@ func second(splitted_strings []string) int {
 	return best
 }
 
-func main() {
-	splitted_strings := aoc2021.ReadWithDelimiter("real.txt", ",")
-	fmt.Println(first(splitted_strings))
-	fmt.Println(second(splitted_strings))
+func Solve() {
+	splittedStrings := Utilities.ReadWithDelimiter("07/real.txt", ",")
+	fmt.Println(First(splittedStrings))
+	fmt.Println(Second(splittedStrings))
 }

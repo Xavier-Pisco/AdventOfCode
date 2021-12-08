@@ -1,7 +1,7 @@
-package main
+package five
 
 import (
-	"aoc2021"
+	"2021/Utilities"
 	"fmt"
 	"math"
 	"strconv"
@@ -17,14 +17,14 @@ func Max(a, b, c int) int {
 }
 
 func createDiagram(lines []line) [][]int {
-	max_x, max_y := 0, 0
+	maxX, maxY := 0, 0
 	for _, l := range lines {
-		max_x = Max(max_x, l.x1, l.x2)
-		max_y = Max(max_y, l.y1, l.y2)
+		maxX = Max(maxX, l.x1, l.x2)
+		maxY = Max(maxY, l.y1, l.y2)
 	}
 	diagram := make([][]int, 0)
-	for i := 0; i <= max_y; i++ {
-		entry := make([]int, max_x+1)
+	for i := 0; i <= maxY; i++ {
+		entry := make([]int, maxX+1)
 		diagram = append(diagram, entry)
 	}
 	return diagram
@@ -36,15 +36,15 @@ func getPoint(point string) (int, int) {
 		panic("Invalid point " + point)
 	}
 	x1, err := strconv.Atoi(p1[0])
-	aoc2021.Check(err)
+	Utilities.Check(err)
 	y1, err := strconv.Atoi(p1[1])
-	aoc2021.Check(err)
+	Utilities.Check(err)
 	return x1, y1
 }
 
-func readLines(splitted_strings []string) []line {
-	lines := make([]line, len(splitted_strings))
-	for i, s := range splitted_strings {
+func readLines(splittedStrings []string) []line {
+	lines := make([]line, len(splittedStrings))
+	for i, s := range splittedStrings {
 		points := strings.Split(s, " -> ")
 		if len(points) != 2 {
 			panic("Invalid line " + s)
@@ -86,8 +86,8 @@ func countHigher(diagram [][]int, value int) int {
 	return count
 }
 
-func first(splitted_strings []string) int {
-	lines := readLines(splitted_strings)
+func First(splittedStrings []string) int {
+	lines := readLines(splittedStrings)
 	diagram := createDiagram(lines)
 	populateDiagramNoDiagonals(&diagram, lines)
 	return countHigher(diagram, 2)
@@ -108,24 +108,24 @@ func populateDiagram(diagram *[][]int, lines []line) {
 				(*diagram)[l.y1][i]++
 			}
 		} else {
-			x_increment := int((l.x2 - l.x1) / int(math.Abs(float64(l.y2-l.y1))))
-			y_increment := int((l.y2 - l.y1) / int(math.Abs(float64(l.x2-l.x1))))
-			for i, j := l.x1, l.y1; i != l.x2+x_increment && j != l.y2+y_increment; i, j = i+x_increment, j+y_increment {
+			xIncrement := int((l.x2 - l.x1) / int(math.Abs(float64(l.y2-l.y1))))
+			yIncrement := int((l.y2 - l.y1) / int(math.Abs(float64(l.x2-l.x1))))
+			for i, j := l.x1, l.y1; i != l.x2+xIncrement && j != l.y2+yIncrement; i, j = i+xIncrement, j+yIncrement {
 				(*diagram)[j][i]++
 			}
 		}
 	}
 }
 
-func second(splitted_strings []string) int {
-	lines := readLines(splitted_strings)
+func Second(splittedStrings []string) int {
+	lines := readLines(splittedStrings)
 	diagram := createDiagram(lines)
 	populateDiagram(&diagram, lines)
 	return countHigher(diagram, 2)
 }
 
-func main() {
-	splitted_strings := aoc2021.Read("real.txt")
-	fmt.Println(first(splitted_strings))
-	fmt.Println(second(splitted_strings))
+func Solve() {
+	splittedStrings := Utilities.Read("05/real.txt")
+	fmt.Println(First(splittedStrings))
+	fmt.Println(Second(splittedStrings))
 }

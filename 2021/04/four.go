@@ -1,7 +1,7 @@
-package main
+package four
 
 import (
-	"aoc2021"
+	"2021/Utilities"
 	"fmt"
 	"strconv"
 	"strings"
@@ -17,33 +17,33 @@ func remove(array []string, s string) []string {
 	return result
 }
 
-func createBoards(board_strings []string) [][][]int {
+func createBoards(boardStrings []string) [][][]int {
 	boards := make([][][]int, 0)
-	for _, board := range board_strings {
+	for _, board := range boardStrings {
 		lines := strings.Split(board, "\n")
-		converted_board := make([][]int, 0)
+		convertedBoard := make([][]int, 0)
 		for _, line := range lines {
-			converted_line := make([]int, 0)
+			convertedLine := make([]int, 0)
 			line := strings.Split(line, " ")
 			line = remove(line, "")
 			for _, s := range line {
 				value, err := strconv.Atoi(s)
-				aoc2021.Check(err)
-				converted_line = append(converted_line, value)
+				Utilities.Check(err)
+				convertedLine = append(convertedLine, value)
 			}
-			converted_board = append(converted_board, converted_line)
+			convertedBoard = append(convertedBoard, convertedLine)
 		}
-		boards = append(boards, converted_board)
+		boards = append(boards, convertedBoard)
 	}
 	return boards
 }
 
 func markDraw(boards *[][][]int, draw int) {
-	for board_position, board := range *boards {
-		for line_position, line := range board {
+	for boardPosition, board := range *boards {
+		for linePosition, line := range board {
 			for position, value := range line {
 				if value == draw {
-					(*boards)[board_position][line_position][position] = -1
+					(*boards)[boardPosition][linePosition][position] = -1
 				}
 			}
 		}
@@ -53,7 +53,7 @@ func markDraw(boards *[][][]int, draw int) {
 func checkWinner(boards [][][]int) (int, bool) {
 	for player, board := range boards {
 		for _, line := range board {
-			if aoc2021.CompareArrays(line, []int{-1, -1, -1, -1, -1}) {
+			if Utilities.CompareArrays(line, []int{-1, -1, -1, -1, -1}) {
 				return player, true
 			}
 		}
@@ -64,7 +64,7 @@ func checkWinner(boards [][][]int) (int, bool) {
 func findWinner(draws []string, boards [][][]int) (int, int, bool) {
 	for _, draw := range draws {
 		draw, err := strconv.Atoi(draw)
-		aoc2021.Check(err)
+		Utilities.Check(err)
 		markDraw(&boards, draw)
 		player, winner := checkWinner(boards)
 		if winner {
@@ -86,9 +86,9 @@ func calculateBoardValue(board [][]int) int {
 	return total
 }
 
-func first(splitted_strings []string) int {
-	draws := splitted_strings[0]
-	boards := createBoards(splitted_strings[1:])
+func First(splittedStrings []string) int {
+	draws := splittedStrings[0]
+	boards := createBoards(splittedStrings[1:])
 	player, draw, winner := findWinner(strings.Split(draws, ","), boards)
 	if winner {
 		return calculateBoardValue(boards[player]) * draw
@@ -101,10 +101,10 @@ func checkLoser(boards [][][]int) (int, bool) {
 	loser := -1
 	for player, board := range boards {
 		for i, line := range board {
-			if aoc2021.CompareArrays(line, []int{-1, -1, -1, -1, -1}) {
+			if Utilities.CompareArrays(line, []int{-1, -1, -1, -1, -1}) {
 				winners[player] = true
 			}
-			if aoc2021.CompareArrays([]int{board[0][i], board[1][i], board[2][i], board[3][i], board[4][i]}, []int{-1, -1, -1, -1, -1}) {
+			if Utilities.CompareArrays([]int{board[0][i], board[1][i], board[2][i], board[3][i], board[4][i]}, []int{-1, -1, -1, -1, -1}) {
 				winners[player] = true
 			}
 		}
@@ -119,23 +119,23 @@ func checkLoser(boards [][][]int) (int, bool) {
 }
 
 func findLoser(draws []string, boards [][][]int) (int, int, bool) {
-	previous_loser := 0
+	previousLoser := 0
 	for _, draw := range draws {
 		draw, err := strconv.Atoi(draw)
-		aoc2021.Check(err)
+		Utilities.Check(err)
 		markDraw(&boards, draw)
 		player, loser := checkLoser(boards)
 		if loser {
-			return previous_loser, draw, true
+			return previousLoser, draw, true
 		}
-		previous_loser = player
+		previousLoser = player
 	}
 	return -1, -1, false
 }
 
-func second(splitted_strings []string) int {
-	draws := splitted_strings[0]
-	boards := createBoards(splitted_strings[1:])
+func Second(splittedStrings []string) int {
+	draws := splittedStrings[0]
+	boards := createBoards(splittedStrings[1:])
 	player, draw, loser := findLoser(strings.Split(draws, ","), boards)
 	if loser {
 		return calculateBoardValue(boards[player]) * draw
@@ -144,8 +144,8 @@ func second(splitted_strings []string) int {
 
 }
 
-func main() {
-	splitted_strings := aoc2021.ReadWithDelimiter("real.txt", "\n\n")
-	fmt.Println(first(splitted_strings))
-	fmt.Println(second(splitted_strings))
+func Solve() {
+	splittedStrings := Utilities.ReadWithDelimiter("04/real.txt", "\n\n")
+	fmt.Println(First(splittedStrings))
+	fmt.Println(Second(splittedStrings))
 }
