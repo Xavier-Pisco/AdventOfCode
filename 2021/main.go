@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	nine "2021/09"
+	ten "2021/10"
 )
 
 func main() {
@@ -23,6 +23,8 @@ func main() {
 	//seven.Solve()
 	// fmt.Println("Eight:")
 	// eight.Solve()
-	fmt.Println("Nine:")
-	nine.Solve()
+	// fmt.Println("Nine:")
+	// nine.Solve()
+	fmt.Println("Ten:")
+	ten.Solve()
 }
