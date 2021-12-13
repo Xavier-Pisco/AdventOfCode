@@ -38,3 +38,7 @@ func CompareArrays(line1 []int, line2 []int) bool {
 	}
 	return true
 }
+
+func RuneToInt(char rune) int {
+	return int(char - '0')
+}
