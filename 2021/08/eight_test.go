@@ -14,7 +14,7 @@ func TestFirst(t *testing.T) {
 }
 
 func TestSecond(t *testing.T) {
-	splittedStrings := Utilities.ReadWithDelimiter("example.txt", ",")
+	splittedStrings := Utilities.Read("example.txt")
 	second := Second(splittedStrings)
 	if second != 61229 {
 		t.Errorf("Second answer should be 61229, result was %d", second)

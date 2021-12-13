@@ -3,6 +3,7 @@ package eight
 import (
 	"2021/Utilities"
 	"fmt"
+	"math"
 	"strings"
 )
 
@@ -15,55 +16,84 @@ func contains(list []rune, char rune) bool {
 	return false
 }
 
-func addCommons(list []rune, number []rune) []rune {
-	if len(list) == 0 {
-		list = number
-		return list
+func containsList(list []rune, chars []rune) bool {
+	return containsNFromList(list, chars, len(chars))
+}
+
+func containsNFromList(list []rune, chars []rune, N int) bool {
+	count := 0
+	for _, char := range chars {
+		if contains(list, char) {
+			count++
+		}
 	}
-	for i, c := range list {
-		if !contains(number, c) {
-			if i < len(list)-1 {
-				list = append(list[:i], list[i+1:]...)
+	return count == N
+}
+
+func findByLength(numbers []string, originalNumbers [][]rune, encodedNumbers *map[int][]rune) {
+	for _, number := range numbers {
+		if len(number) == len(originalNumbers[1]) {
+			(*encodedNumbers)[1] = []rune(number)
+		} else if len(number) == len(originalNumbers[4]) {
+			(*encodedNumbers)[4] = []rune(number)
+		} else if len(number) == len(originalNumbers[7]) {
+			(*encodedNumbers)[7] = []rune(number)
+		} else if len(number) == len(originalNumbers[8]) {
+			(*encodedNumbers)[8] = []rune(number)
+		}
+	}
+}
+
+func findOthers(numbers []string, originalNumbers [][]rune, encodedNumbers *map[int][]rune) {
+	for _, number := range numbers {
+		if len(number) == len(originalNumbers[2]) {
+			if containsList([]rune(number), (*encodedNumbers)[1]) {
+				(*encodedNumbers)[3] = []rune(number)
+			} else if containsNFromList((*encodedNumbers)[4], []rune(number), 2) {
+				(*encodedNumbers)[2] = []rune(number)
 			} else {
-				list = list[:i]
+				(*encodedNumbers)[5] = []rune(number)
+			}
+		} else if len(number) == len(originalNumbers[0]) {
+			if containsList([]rune(number), (*encodedNumbers)[4]) {
+				(*encodedNumbers)[9] = []rune(number)
+			} else if containsList([]rune(number), (*encodedNumbers)[7]) {
+				(*encodedNumbers)[0] = []rune(number)
+			} else {
+				(*encodedNumbers)[6] = []rune(number)
 			}
 		}
 	}
-	return list
 }
 
-func decodeNumber(number []rune, encode *map[rune][]rune, numbers [][]rune) {
-	switch len(number) {
-	case len(numbers[1]):
-		for _, c := range numbers[1] {
-			(*encode)[c] = addCommons((*encode)[c], number)
-		}
-	case len(numbers[4]):
-		for _, c := range numbers[4] {
-			(*encode)[c] = addCommons((*encode)[c], number)
-		}
-	case len(numbers[7]):
-		for _, c := range numbers[7] {
-			(*encode)[c] = addCommons((*encode)[c], number)
-		}
-	case len(numbers[8]):
-		for _, c := range numbers[8] {
-			(*encode)[c] = addCommons((*encode)[c], number)
+func findNumbers(numbers []string, encodedNumbers *map[int][]rune, originalNumbers [][]rune) {
+	findByLength(numbers, originalNumbers, encodedNumbers)
+	findOthers(numbers, originalNumbers, encodedNumbers)
+}
+
+func findNumber(number string, encodedNumbers map[int][]rune) int {
+	for i := 0; i < 10; i++ {
+		if containsList(encodedNumbers[i], []rune(number)) && containsList([]rune(number), encodedNumbers[i]) {
+			return i
 		}
 	}
+	panic("Number not found")
 }
 
 func Second(splittedStrings []string) int {
-	_, fourDigits := parseInput(splittedStrings)
+	uniqueSignals, fourDigits := parseInput(splittedStrings)
 	numbers := createNumbers()
-	encode := make(map[rune][]rune)
-	for _, fourDigit := range fourDigits {
-		for _, digit := range fourDigit {
-			decodeNumber([]rune(digit), &encode, numbers)
+	total := 0
+	for i := 0; i < len(uniqueSignals); i++ {
+		encodedNumbers := make(map[int][]rune)
+		findNumbers(uniqueSignals[i], &encodedNumbers, numbers)
+		value := 0
+		for j, fourDigit := range fourDigits[i] {
+			value += findNumber(fourDigit, encodedNumbers) * int(math.Pow(10, float64(3-j)))
 		}
+		total += value
 	}
-	fmt.Println(encode)
-	return 1
+	return total
 }
 
 func parseLine(line string) ([]string, []string) {
@@ -136,7 +166,7 @@ func First(splittedStrings []string) int {
 }
 
 func Solve() {
-	splittedStrings := Utilities.Read("08/example.txt")
+	splittedStrings := Utilities.Read("08/real.txt")
 	fmt.Println(First(splittedStrings))
 	fmt.Println(Second(splittedStrings))
 }
