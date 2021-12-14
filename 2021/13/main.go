@@ -11,11 +11,26 @@ import (
 func Second(splittedStrings []string) int {
 	dotsPositions := strings.Split(splittedStrings[0], "\n")
 	folds := strings.Split(splittedStrings[1], "\n")
-	paper := initiatePaper(dotsPositions)
-	for _, fold := range folds {
-		axis, value := parseFold(fold)
-		paper = foldPaper(paper, axis, value)
+	finalDots := make([]string, 0)
+	for _, dot := range dotsPositions {
+		position := strings.Split(dot, ",")
+		x, err := strconv.Atoi(position[0])
+		Utilities.Check(err)
+		y, err := strconv.Atoi(position[1])
+		Utilities.Check(err)
+		for _, fold := range folds {
+			axis := fold[11]
+			value, err := strconv.Atoi(fold[13:])
+			Utilities.Check(err)
+			if axis == 'x' && x > value {
+				x = x - 2*int(math.Abs(float64(x-value)))
+			} else if axis == 'y' && y > value {
+				y = y - 2*int(math.Abs(float64(y-value)))
+			}
+		}
+		finalDots = append(finalDots, strconv.Itoa(x)+","+strconv.Itoa(y))
 	}
+	paper := initiatePaper(finalDots)
 	for _, line := range paper {
 		fmt.Println(string(line))
 	}
@@ -60,7 +75,7 @@ func parseFold(fold string) (rune, int) {
 	return axis, value
 }
 
-func foldHorizontal(paper [][]rune, value int) [][]rune {
+func foldVertical(paper [][]rune, value int) [][]rune {
 	newPaper := make([][]rune, 0)
 	for i := range paper {
 		line := make([]rune, 0)
@@ -76,7 +91,7 @@ func foldHorizontal(paper [][]rune, value int) [][]rune {
 	return newPaper
 }
 
-func foldVertical(paper [][]rune, value int) [][]rune {
+func foldHorizontal(paper [][]rune, value int) [][]rune {
 	newPaper := make([][]rune, 0)
 	for i := 0; i < value; i++ {
 		line := make([]rune, 0)
@@ -94,11 +109,9 @@ func foldVertical(paper [][]rune, value int) [][]rune {
 
 func foldPaper(paper [][]rune, axis rune, value int) [][]rune {
 	if axis == 'x' {
-		fmt.Println(value, len(paper[0]))
-		return foldHorizontal(paper, value)
-	} else {
-		fmt.Println(value, len(paper))
 		return foldVertical(paper, value)
+	} else {
+		return foldHorizontal(paper, value)
 	}
 }
 
