@@ -4,10 +4,124 @@ import (
 	"2021/Utilities"
 	"fmt"
 	"math"
+	"strconv"
 )
 
+func sum(bits []int) int {
+	total := 0
+	for _, b := range bits {
+		total += b
+	}
+	return total
+}
+
+func product(bits []int) int {
+	total := 1
+	for _, b := range bits {
+		total *= b
+	}
+	return total
+}
+
+func min(total []int) int {
+	m := math.MaxInt
+	for _, n := range total {
+		if n < m {
+			m = n
+		}
+	}
+	return m
+}
+
+func max(total []int) int {
+	m := math.MinInt
+	for _, n := range total {
+		if n > m {
+			m = n
+		}
+	}
+	return m
+}
+
+func calculate(total []int, t int) int {
+	switch t {
+	case 0:
+		return sum(total)
+	case 1:
+		return product(total)
+	case 2:
+		return min(total)
+	case 3:
+		return max(total)
+	case 5:
+		if total[0] > total[1] {
+			return 1
+		} else {
+			return 0
+		}
+	case 6:
+		if total[0] < total[1] {
+			return 1
+		} else {
+			return 0
+		}
+	case 7:
+		if total[0] == total[1] {
+			return 1
+		} else {
+			return 0
+		}
+	default:
+		panic("Type not correct " + strconv.Itoa(t))
+	}
+}
+
+func decodeBits2(bits []int) (int, int) {
+	if len(bits) == 0 {
+		return 0, 0
+	}
+	i := 3
+	t := bitsToDec(bits[i : i+3])
+	i += 3
+	switch t {
+	case 4:
+		number := make([]int, 0)
+		number = append(number, bits[i+1:i+5]...)
+		for bits[i] == 1 {
+			i += 5
+			number = append(number, bits[i+1:i+5]...)
+		}
+		return bitsToDec(number), i + 5
+	default:
+		length := bits[i]
+		i += 1
+		total := make([]int, 0)
+		if length == 0 {
+			lenSubPackets := bitsToDec(bits[i : i+15])
+			i += 15
+			totalLength := i + lenSubPackets
+			for i < totalLength {
+				value, position := decodeBits2(bits[i:])
+				i += position
+				total = append(total, value)
+			}
+		} else {
+			numberSubPackets := bitsToDec(bits[i : i+11])
+			i += 11
+			for x := 0; x < numberSubPackets; x++ {
+				value, position := decodeBits2(bits[i:])
+				total = append(total, value)
+				i += position
+			}
+		}
+		return calculate(total, t), i
+	}
+}
+
 func Second(splittedStrings []string) int {
-	return 0
+	bits := hexToBits(splittedStrings[0])
+	value, _ := decodeBits2(bits)
+	return value
 }
 
 func hexToBits(s string) []int {
