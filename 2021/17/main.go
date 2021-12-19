@@ -8,15 +8,6 @@ import (
 	"strings"
 )
 
-func contains(jump [2]int, jumps [][2]int) bool {
-	for _, j := range jumps {
-		if j[0] == jump[0] && j[1] == jump[1] {
-			return true
-		}
-	}
-	return false
-}
-
 func Second(splittedStrings []string) int {
 	xRange, yRange := readRanges(splittedStrings[0])
 	validX := calculateX(xRange)
@@ -66,10 +57,10 @@ func calculateX(xRange [2]int) map[int][2]int {
 
 func calculateY(yRange [2]int) map[int][2]int {
 	validX := make(map[int][2]int)
-	for i := yRange[0]; i < int(math.Abs(float64(yRange[0]))); i++ {
+	for i := yRange[0]; i <= int(math.Abs(float64(yRange[0]))); i++ {
 		position, velocity, minValid, maxValid, step := 0, i, math.MaxInt, 0, 0
 		for {
-			if position <= yRange[1] && step < minValid {
+			if position <= yRange[1] && position >= yRange[0] && step < minValid {
 				minValid = step
 			}
 			if position < yRange[0] {
